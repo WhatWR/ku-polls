@@ -3,6 +3,7 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
+
 from .models import Question
 
 
@@ -34,6 +35,19 @@ class QuestionModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
+
+    def test_is_published(self):
+        """Test is published function."""
+        time = timezone.now()
+        recent_question = Question(pub_date=time)
+        self.assertIs(recent_question.is_publish(), True)
+
+    def test_can_vote(self):
+        """Test can vote function."""
+        time = timezone.now()
+        recent_question = Question(pub_date=time)
+        self.assertIs(recent_question.can_vote(), True)
+
 
 def create_question(question_text, days):
     """
@@ -101,6 +115,7 @@ class QuestionIndexViewTests(TestCase):
             response.context['latest_question_list'],
             ['<Question: Past question 2.>', '<Question: Past question 1.>']
         )
+
 
 class QuestionDetailViewTests(TestCase):
     def test_future_question(self):
